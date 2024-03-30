@@ -36,4 +36,4 @@ const attributesReducer = (state = initialState, action) => {
 	return (actionsToTake[action.type] || actionsToTake.DEFAULT)(state, action.parameter);
 };
 
-module.exports = attributesReducer;
+export default attributesReducer;

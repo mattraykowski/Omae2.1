@@ -1,7 +1,5 @@
 import { REMOVE_SKILL } from './../const';
 
-function action(parameter) {
+export default (parameter) => {
 	return { type: REMOVE_SKILL, parameter };
 }
-
-module.exports = action;

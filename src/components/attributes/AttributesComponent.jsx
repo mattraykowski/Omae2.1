@@ -1,8 +1,8 @@
 import React from 'react';
 
-import 'styles/Attributes.sass';
-import metatypeData from 'data/metatype.json';
-import priorityData from 'data/priority.json';
+import '../../styles/Attributes.sass';
+import metatypeData from '../../data/metatype.json';
+import priorityData from '../../data/priority.json';
 // TODO: figure out how to make the lint used propTypesChecking with an alias
 import DisplayTableComponent from '../DisplayTableComponent';
 import PropTypeChecking from '../../config/propTypeChecking';

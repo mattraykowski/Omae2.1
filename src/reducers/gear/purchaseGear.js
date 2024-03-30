@@ -406,4 +406,4 @@ const purchaseGearReducer = (state = initialState, action) => {
 	return (actionsToTake[action.type] || actionsToTake.DEFAULT)(state, action.parameter);
 };
 
-module.exports = purchaseGearReducer;
+export default purchaseGearReducer;

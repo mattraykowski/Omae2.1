@@ -1,7 +1,5 @@
 import { DEMODDING_MULTI } from './../const';
 
-function action(parameter) {
+export default (parameter) => {
 	return { type: DEMODDING_MULTI, parameter };
 }
-
-module.exports = action;

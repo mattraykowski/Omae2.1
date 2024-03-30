@@ -1,7 +1,5 @@
 import { DEMODDING_CAPACITY } from './../const';
 
-function action(parameter) {
+export default (parameter) => {
 	return { type: DEMODDING_CAPACITY, parameter };
 }
-
-module.exports = action;

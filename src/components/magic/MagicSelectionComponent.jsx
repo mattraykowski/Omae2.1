@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import 'styles/magic/MagicSelection.sass';
+import '../../styles/magic/MagicSelection.sass';
 import SpellSelector from './SpellSelectorComponent';
 import PowerSelector from './adeptPowers/PowerSelectorComponent';
 import priorityData from '../../data/priority.json';

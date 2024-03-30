@@ -1,7 +1,5 @@
 import { ADD_SKILL } from './../const';
 
-function action(parameter) {
+export default (parameter) => {
 	return { type: ADD_SKILL, parameter };
 }
-
-module.exports = action;

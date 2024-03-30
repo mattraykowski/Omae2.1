@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import 'styles/Modal.sass';
+import '../styles/Modal.sass';
 
 class ModalComponent extends React.PureComponent {
 	constructor(props) {

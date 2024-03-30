@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import 'styles/magic/SpellSelector.sass';
 import FilterTable from '../../FilterableTable';
 import powerData from '../../../data/powers.json';
 import PropTypeChecking from '../../../config/propTypeChecking';
@@ -10,6 +9,7 @@ import PowerCategoryHeader from './PowerCategoryHeader';
 import PowerDetailRow from './PowerDetailRow';
 import Modal from '../../ModalButtonComponent';
 
+// import 'styles/magic/SpellSelector.sass';
 class PowerSelectorComponent extends React.Component {
 	render() {
 		const {selectedPowers, pointsSpent, maxPoints, isMystic, karmaSpent, actions} = this.props;

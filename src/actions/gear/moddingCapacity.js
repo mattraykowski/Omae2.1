@@ -1,7 +1,5 @@
 import { MODDING_CAPACITY } from './../const';
 
-function action(parameter) {
+export default (parameter) => {
 	return { type: MODDING_CAPACITY, parameter };
 }
-
-module.exports = action;

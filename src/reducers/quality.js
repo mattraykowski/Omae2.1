@@ -63,4 +63,4 @@ const qualityReducer = (state = initialState, action) => {
 	return (actionsToTake[action.type] || actionsToTake.DEFAULT)(state, action.parameter);
 };
 
-module.exports = qualityReducer;
+export default qualityReducer;

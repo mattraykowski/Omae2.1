@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import armorMods from 'data/armorAccessories.json';
+import armorMods from '../../../data/armorAccessories.json';
 import ArmorModRow from './ArmorModRow';
 import { moddingCapacity, demoddingCapacity } from '../../../actions';
 import DisplayTableComponent from '../../DisplayTableComponent';

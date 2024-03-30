@@ -156,4 +156,4 @@ const attributesReducer = (state = initialState, action) => {
 	}
 };
 
-module.exports = attributesReducer;
+export default attributesReducer;

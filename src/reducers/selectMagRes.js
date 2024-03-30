@@ -17,4 +17,4 @@ const magicReducer = (state = initialState, action) => {
 	return (actionsToTake[action.type] || actionsToTake.DEFAULT)(state, action.parameter);
 };
 
-module.exports = magicReducer;
+export default magicReducer;

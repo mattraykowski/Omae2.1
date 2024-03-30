@@ -1,7 +1,5 @@
 import { SELECT_GRADE } from './../const';
 
-function action(parameter) {
+export default (parameter) => {
 	return { type: SELECT_GRADE, parameter };
 }
-
-module.exports = action;

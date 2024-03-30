@@ -23,4 +23,4 @@ const modalReducer = (state = initialState, action) => {
 	return (actionsToTake[action.type] || actionsToTake.DEFAULT)(state, action.parameter);
 };
 
-module.exports = modalReducer;
+export default modalReducer;

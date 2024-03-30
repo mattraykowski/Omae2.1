@@ -5,8 +5,8 @@
  *          you edit them, they are not updated again.
  */
 // require('normalize.css');
-import 'styles/bootstrap-overwrite.scss';
-import 'styles/App.scss';
+import '../styles/bootstrap-overwrite.scss';
+import '../styles/App.scss';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';

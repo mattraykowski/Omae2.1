@@ -1,7 +1,5 @@
 import { WEAPON_MODDING } from './../const';
 
-function action(parameter) {
+export default (parameter) => {
 	return { type: WEAPON_MODDING, parameter };
 }
-
-module.exports = action;

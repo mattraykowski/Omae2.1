@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import metatypeData from 'data/metatype.json';
+import metatypeData from '../../../data/metatype.json';
 import DisplayTable from '../../DisplayTableComponent';
 import { purchaseGear } from '../../../actions';
 import WareGradeComponent from './WareGradeComponent';

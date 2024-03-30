@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import 'styles/Modal.sass';
+import '../styles/Modal.sass';
 import Modal from './Modal';
 
 class ModalButtonComponent extends React.PureComponent {

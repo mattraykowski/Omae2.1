@@ -10,7 +10,7 @@ import mechData from '../../data/vehiclesAndDrones.json';
 import mechMods from '../../data/vehicleMods.json';
 import PropTypeChecking from '../../config/propTypeChecking';
 
-import '../../styles/gear/StreetGear.scss';
+// import '../../styles/gear/StreetGear.scss';
 
 class StreetGearComponent extends React.PureComponent {
 	componentWillMount() {

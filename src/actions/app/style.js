@@ -1,7 +1,6 @@
 import { STYLE } from './../const';
 
-function action(parameter) {
+export default (parameter) => {
 	return { type: STYLE, parameter };
 }
 
-module.exports = action;

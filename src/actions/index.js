@@ -48,7 +48,7 @@ import demoddingVehicle from './gear/demoddingVehicle';
 import moddingDrone from './gear/moddingDrone';
 import demoddingDrone from './gear/demoddingDrone';
 
-const actions = {
+export {
 	priorityTable,
 	selectMetatype,
 	incrementAttribute,
@@ -92,5 +92,3 @@ const actions = {
 	moddingDrone,
 	demoddingDrone,
 };
-
-module.exports = actions;

@@ -21,7 +21,7 @@ import purchaseGear from './gear/purchaseGear';
 import filterTable from './filterTable';
 import augmentation from './gear/augmentation';
 
-const reducers = {
+const reducers = combineReducers({
 	priorityTable,
 	selectMetatype,
 	attributes,
@@ -35,5 +35,6 @@ const reducers = {
 	purchaseGear,
 	filterTable,
 	augmentation,
-};
-module.exports = combineReducers(reducers);
+});
+
+export {reducers};
