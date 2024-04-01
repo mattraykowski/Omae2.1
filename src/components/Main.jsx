@@ -1,7 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { setStyle } from '../reducers/appControl';
 
-const AppComponent = ({style}) => {
+const AppComponent = () => {
+	const dispatch = useDispatch();
+
 	return (
 		<div className="row">
 			<div className="program-title col">
@@ -12,7 +16,7 @@ const AppComponent = ({style}) => {
 				<h4>Theme</h4>
 				<select
 					className="form-control"
-					onChange={(e) => { style({styleTheme: e.target.value}); }}>
+					onChange={(e) => { dispatch(setStyle({styleTheme: e.target.value})); }}>
 					<option value="">OutRun</option>
 					<option value="mundane">Mundane</option>
 					<option value="night-watch">Night Watch</option>

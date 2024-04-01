@@ -1,29 +1,46 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fixSummary } from '../reducers/appControl';
+
 import RedditExport from './export/RedditComponent';
 import metatypeData from '../data/metatype.json';
 import priorityTableData from '../data/priority.json';
-import PropTypeChecking from '../config/propTypeChecking';
 
 import '../styles/Summary.sass';
 
-const TableHeader = () => {
-	return <thead><tr><th>Name</th><th>Ref</th></tr></thead>;
-};
 
-const SummaryComponent = (
-	{
-		priority,
-		metatype,
-		attributes,
-		magres,
-		skills,
-		fixed,
-		spellsAndPowers,
-		selectedQualities,
-		karma,
-		purchaseGear,
-	}) => {
+const TableHeader = () => <thead><tr><th>Name</th><th>Ref</th></tr></thead>;
+
+const SummaryComponent = () => {
+	const dispatch = useDispatch();
+	const handleScroll = useCallback(() => {
+		const summaryElement = document.getElementById('summary');
+		const summaryLocation = summaryElement.getBoundingClientRect().top;
+		const summaryFix = summaryLocation < 0;
+		dispatch(fixSummary({ summaryFix }));
+	})
+
+	useEffect(() => {
+		window.addEventListener('scroll', handleScroll);
+
+		return () => {
+			window.removeEventListener('scroll', handleScroll);
+		}
+	}, []);
+
+	const priority = useSelector(state => state.priorityTable);
+	const metatype = useSelector(state => state.selectMetatype);
+	const attributes = useSelector(state => state.attributes);
+	const magres = useSelector(state => state.selectMagRes);
+	const skills = useSelector(state => state.settingSkills);
+	const fixed = useSelector(state => state.appControl.summaryFix);
+	const spellsAndPowers = useSelector(state => state.spellSelect);
+	const selectedQualities = useSelector(state => state.quality);
+	const karma = useSelector(state => state.karma);
+	const purchaseGear = useSelector(state => state.purchaseGear);
+	const karmaTotal = karma - spellsAndPowers.powerPointsKarma;
+
+
 	const priorityHead = [],
 		priorityData = [],
 		attributesHead = [],
@@ -180,7 +197,7 @@ const SummaryComponent = (
 
 			<div>
 				<h2>Karma</h2>
-				<p><strong>{karma}</strong></p>
+				<p><strong>{karmaTotal}</strong></p>
 			</div>
 
 			<div className="summary-qualities">
@@ -284,19 +301,6 @@ const SummaryComponent = (
 			</div>
 		</div>
 	);
-};
-
-SummaryComponent.propTypes = {
-	priority: PropTypeChecking.priorityTable.isRequired,
-	metatype: PropTypeChecking.selectMetatype.isRequired,
-	attributes: PropTypeChecking.attributes.isRequired,
-	magres: PropTypeChecking.selectMagRes.isRequired,
-	skills: PropTypeChecking.settingSkills.isRequired,
-	fixed: PropTypes.bool.isRequired,
-	spellsAndPowers: PropTypeChecking.spellSelect.isRequired,
-	selectedQualities: PropTypeChecking.quality.isRequired,
-	karma: PropTypeChecking.karma.isRequired,
-	purchaseGear: PropTypeChecking.purchaseGear.isRequired,
 };
 
 export default SummaryComponent;

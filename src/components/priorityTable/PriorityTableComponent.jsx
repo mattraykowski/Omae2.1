@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import '../../styles/PriorityTable.scss';
 import priorityData from '../../data/priority.json';
@@ -6,51 +7,26 @@ import propTypeChecking from '../../config/propTypeChecking';
 import MetatypeDataCell from './MetatypeDataCell';
 import MagicDataCell from './MagicDataCell';
 
-class PriorityTableComponent extends React.PureComponent {
-	render() {
-		const {changePriority, priorityTable} = this.props;
-		return (
-			<div className="col">
-				<h2>Priority Table</h2>
-				<table className="table table-responsive-xl table-bordered priority-table">
-					<PriorityLabel />
-					<tbody>
-						<PriorityRow
-							rating="A"
-							priorityTableData={priorityTable}
-							changePriority={changePriority}
-						/>
-						<PriorityRow
-							rating="B"
-							priorityTableData={priorityTable}
-							changePriority={changePriority}
-						/>
-						<PriorityRow
-							rating="C"
-							priorityTableData={priorityTable}
-							changePriority={changePriority}
-						/>
-						<PriorityRow
-							rating="D"
-							priorityTableData={priorityTable}
-							changePriority={changePriority}
-						/>
-						<PriorityRow
-							rating="E"
-							priorityTableData={priorityTable}
-							changePriority={changePriority}
-						/>
-					</tbody>
-				</table>
-			</div>
-		);
-	}
-}
+import { setPriority } from '../../reducers/priorityTable';
+
+const PriorityTableComponent = () => (
+	<div className="col">
+		<h2>Priority Table</h2>
+		<table className="table table-responsive-xl table-bordered priority-table">
+			<PriorityLabel />
+			<tbody>
+				<PriorityRow rating="A"	/>
+				<PriorityRow rating="B" />
+				<PriorityRow rating="C" />
+				<PriorityRow rating="D"	/>
+				<PriorityRow rating="E"	/>
+			</tbody>
+		</table>
+	</div>
+);
 
 // helper function
-function isActive(active) {
-	return active ? 'table-success' : '';
-}
+const isActive = (active) => active ? 'table-success' : '';
 
 const PriorityLabel = () => {
 	return (
@@ -128,7 +104,11 @@ const ResourcesDataCell = ({rating, active, changePriority}) => {
 		</td>);
 };
 
-const PriorityRow = ({rating, priorityTableData, changePriority}) => {
+const PriorityRow = ({rating}) => {
+	const priorityTableData = useSelector(state => state.priorityTable);
+	const dispatch = useDispatch();
+	const changePriority = priorityData => dispatch(setPriority(priorityData));
+
 	return (
 		<tr>
 			<th>{rating}</th>

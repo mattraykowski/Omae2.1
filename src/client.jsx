@@ -2,9 +2,9 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import App from './containers/App';
-import configureStore from './stores';
+import store from './stores';
 
-const store = configureStore();
+// const store = configureStore();
 const container =  document.getElementById('root');
 const root = createRoot(container);
 const	render = (Component) => {

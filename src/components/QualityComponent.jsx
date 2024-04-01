@@ -5,8 +5,152 @@ import DisplayTable from './DisplayTableComponent';
 import FilterTable from './FilterableTable';
 import qualityData from '../data/qualities.json';
 import propTypeChecking from '../config/propTypeChecking';
+import { useDispatch, useSelector } from 'react-redux';
+import { removeQuality, selectQuality } from '../reducers/quality';
+import { setKarma } from '../reducers/karma';
 
-class QualityComponent extends React.PureComponent {
+
+const QualityComponent = ({ karma }) => {
+	const dispatch = useDispatch();
+	const selectedQualities = useSelector(state => state.quality);
+	const actions = {};
+	const qualitiesTableRow = {
+		Positive: [],
+		Negative: [],
+	};
+
+	const generateQualityTableRow = (quality, button) => {
+		return (
+			<tr key={`${quality.category}-${quality.name}`}>
+				<td>{button}</td>
+				<td>{quality.name}</td>
+				<td>{quality.karma}</td>
+				<td>
+					{quality.source} p{quality.page}
+				</td>
+			</tr>
+		);
+	};
+	
+	const generateSelectedQualityTableRow = (selectQualities) => {
+		return selectQualities.map((quality, qualityIndex) => {
+			const removeButton = (
+				<button
+					className="btn btn-warning"
+					onClick={() => {
+						dispatch(removeQuality({
+							qualityIndex,
+							category: quality.category,
+						}));
+
+						dispatch(setKarma({
+							karmaPoints: Number(quality.karma),
+						}))
+					}}
+				>
+					-
+				</button>
+			);
+			return generateQualityTableRow(quality, removeButton);
+		});
+	};
+
+	const generatePurchaseableQualityTableRow = (quality) => {
+		const addButton = (
+			<button
+				className="btn btn-success"
+				onClick={() => {
+					dispatch(selectQuality({ newQuality: quality }));
+					dispatch(setKarma({ karmaPoints: -Number(quality.karma) }))
+				}}
+			>
+				+
+			</button>
+		);
+		qualitiesTableRow[quality.category].push(
+			generateQualityTableRow(quality, addButton),
+		);
+	};
+
+	qualityData.forEach(generatePurchaseableQualityTableRow);
+	
+
+	return (
+		<div className="quality-component row">
+			<div className="col-md-12">
+				<h2>Qualities</h2>
+				<p>
+					<span>
+						Karma: <strong>{karma}</strong>
+					</span>
+					<span
+						className={
+							selectedQualities.karma.Positive > 25
+								? 'text-danger'
+								: ''
+						}
+					>
+						{' '}
+						Positive:{' '}
+						<strong>{selectedQualities.karma.Positive}</strong>
+					</span>
+					<span
+						className={
+							selectedQualities.karma.Negative < -25
+								? 'text-danger'
+								: ''
+						}
+					>
+						{' '}
+						Negative:{' '}
+						<strong>{selectedQualities.karma.Negative}</strong>
+					</span>
+				</p>
+				<Modal
+					modalName="Positive"
+					modalContent={
+						<QualityTable
+							tableRows={qualitiesTableRow.Positive}
+						/>
+					}
+				/>
+
+				<Modal
+					modalName="Negative"
+					modalContent={
+						<QualityTable
+							tableRows={qualitiesTableRow.Negative}
+						/>
+					}
+				/>
+			</div>
+			{selectedQualities.Positive.length > 0 ? (
+				<div className="qualities-positive--seleted col-md-6">
+					<h3>Positive Qualities</h3>
+					<DisplayTable
+						header={<QualityHeader buttonType="Remove" />}
+						body={generateSelectedQualityTableRow(
+							selectedQualities.Positive,
+						)}
+					/>
+				</div>
+			) : null}
+			{selectedQualities.Negative.length > 0 ? (
+				<div className="qualities-negative--seleted col-md-6">
+					<h3>Negative Qualities</h3>
+					<DisplayTable
+						header={<QualityHeader buttonType="Remove" />}
+						body={generateSelectedQualityTableRow(
+							selectedQualities.Negative,
+						)}
+					/>
+				</div>
+			) : null}
+		</div>
+	);
+}
+
+class QualityComponentClass extends React.PureComponent {
 	componentWillMount() {
 		const { actions } = this.props;
 

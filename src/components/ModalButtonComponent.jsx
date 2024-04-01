@@ -1,10 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 import '../styles/Modal.sass';
 import Modal from './Modal';
 
-class ModalButtonComponent extends React.PureComponent {
+
+const ModalButtonComponent = ({ modalName, modalContent }) => {
+	const [ showModal, setShowModal ] = useState(false);
+	const openModal = () => {
+		setShowModal(true);
+		document.querySelector('body').classList.add('modal-open');
+	};
+	const closeModal = () => {
+		setShowModal(false);
+		document.querySelector('body').classList.remove('modal-open');
+	}
+
+	return (
+		<div className="modal-component">
+			<button
+				type="button"
+				className="btn btn-info modal-open-btn"
+				onClick={openModal}
+			>
+				{modalName}
+			</button>
+			{
+				showModal && <Modal
+					modalName={modalName}
+					modalContent={modalContent}
+					closeModal={closeModal}
+				/>
+			}
+		</div>
+	);
+}
+
+class ModalButtonComponentClass extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.openModal = this.openModal.bind(this);

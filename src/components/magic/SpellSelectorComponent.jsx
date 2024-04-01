@@ -153,89 +153,86 @@ function generateSpellDetailTablesRows(
 	return spellTables;
 }
 
-class SpellSelectorComponent extends React.Component {
-	render() {
-		const {
-				abilities,
-				addSpell,
-				removeSpell,
-				selectedSpells,
-				spellMax,
-			} = this.props,
-			activeAbility = {
-				Spells: () => {
-					return spellData;
-				},
-				'Complex Forms': () => {
-					return complexformData;
-				},
+const SpellSelectorComponent = ({
+	abilities,
+	addSpell,
+	removeSpell,
+	selectedSpells,
+	spellMax,
+}) => {
+	const activeAbility = {
+			Spells: () => {
+				return spellData;
 			},
-			abilityData = activeAbility[abilities](),
-			generateAddSpellButton = (spell, spellName) => {
-				const addSpellClick = () => {
-					if (spellMax > selectedSpells.length) {
-						// eslint-disable-next-line react/no-string-refs
-						const spellNameOptions = this.refs[
-								`spellOption${spell.name}`
-							]
-								? this.refs[`spellOption${spell.name}`].value
-								: '',
-							newName =
-								spellName.start +
-								spellNameOptions +
-								spellName.end,
-							spellToAdd = Object.assign({}, spell, {
-								name: newName,
-							});
-						if (spellToAdd.bonus) {
-							spellToAdd.bonus = spellNameOptions.replace(
-								/[()]/g,
-								'',
-							);
-						}
-						addSpell({ newSpell: spellToAdd });
+			'Complex Forms': () => {
+				return complexformData;
+			},
+		},
+		abilityData = activeAbility[abilities](),
+		generateAddSpellButton = (spell, spellName) => {
+			const addSpellClick = () => {
+				if (spellMax > selectedSpells.length) {
+					// eslint-disable-next-line react/no-string-refs
+					const spellNameOptions = this.refs[
+							`spellOption${spell.name}`
+						]
+							? this.refs[`spellOption${spell.name}`].value
+							: '',
+						newName =
+							spellName.start +
+							spellNameOptions +
+							spellName.end,
+						spellToAdd = Object.assign({}, spell, {
+							name: newName,
+						});
+					if (spellToAdd.bonus) {
+						spellToAdd.bonus = spellNameOptions.replace(
+							/[()]/g,
+							'',
+						);
 					}
-				};
+					addSpell({ newSpell: spellToAdd });
+				}
+			};
 
+			return (
+				<button className="btn btn-success" onClick={addSpellClick}>
+					+
+				</button>
+			);
+		},
+		spellsToSeletTables = generateSpellDetailTablesRows(
+			abilityData,
+			generateAddSpellButton,
+			abilities,
+		),
+		addSpellModals = Object.keys(spellsToSeletTables).map(
+			(spellCat) => {
 				return (
-					<button className="btn btn-success" onClick={addSpellClick}>
-						+
-					</button>
+					<Modal
+						key={`spells-${spellCat}`}
+						modalName={spellCat}
+						modalContent={
+							<SpellsTables
+								spellRowData={spellsToSeletTables[spellCat]}
+							/>
+						}
+					/>
 				);
 			},
-			spellsToSeletTables = generateSpellDetailTablesRows(
-				abilityData,
-				generateAddSpellButton,
-				abilities,
-			),
-			addSpellModals = Object.keys(spellsToSeletTables).map(
-				(spellCat) => {
-					return (
-						<Modal
-							key={`spells-${spellCat}`}
-							modalName={spellCat}
-							modalContent={
-								<SpellsTables
-									spellRowData={spellsToSeletTables[spellCat]}
-								/>
-							}
-						/>
-					);
-				},
-			);
-
-		return (
-			<div className="spells">
-				<div className="spell-selector row">
-					<div className="col">{addSpellModals}</div>
-				</div>
-				<SpellSelectedDisplay
-					selectedSpells={selectedSpells}
-					removeSpell={removeSpell}
-				/>
-			</div>
 		);
-	}
+
+	return (
+		<div className="spells">
+			<div className="spell-selector row">
+				<div className="col">{addSpellModals}</div>
+			</div>
+			<SpellSelectedDisplay
+				selectedSpells={selectedSpells}
+				removeSpell={removeSpell}
+			/>
+		</div>
+	);
 }
 
 SpellSelectorComponent.propTypes = {

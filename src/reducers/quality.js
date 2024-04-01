@@ -1,66 +1,34 @@
-/* Define your initial state here.
- *
- * If you change the type from object to something else, do not forget to update
- * src/container/App.js accordingly.
- */
+import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
-	Positive: [],
-	Negative: [],
-	karma: {
-		Positive: 0,
-		Negative: 0,
+
+const qualitySlice = createSlice({
+	name: 'quality',
+	initialState: {
+		Positive: [],
+		Negative: [],
+		karma: {
+			Positive: 0,
+			Negative: 0,
+		},
 	},
-};
+	reducers: {
+		selectQuality: (state, action) => {
+			const newQuality = action.payload.newQuality;
+			const { category, karma } = newQuality;
 
-const qualityReducer = (state = initialState, action) => {
-	const actionsToTake = {
-		SELECT_QUALITY: (prevState, {newQuality}) => {
-			const {category} = newQuality;
-
-			return Object.assign(
-				{},
-				prevState,
-				{
-					[category]: [
-						...prevState[category],
-						newQuality,
-					],
-					karma: Object.assign(
-						{},
-						prevState.karma,
-						{
-							[category]: prevState.karma[category] + Number(newQuality.karma),
-						},
-					),
-				},
-			);
+			state[category].push(newQuality);
+			state.karma[category] = state.karma[category] + Number(karma);
 		},
+		removeQuality: (state, action) => {
+			const {qualityIndex, category} = action.payload;
+			const removeQualityKarma = state[category][qualityIndex].karma;
 
-		REMOVE_QUALITY: (prevState, {qualityIndex, category}) => {
-			const qualityArray = prevState[category],
-				removeQualityKarma = prevState[category][qualityIndex].karma;
-			return Object.assign(
-				{},
-				prevState,
-				{
-					[category]: [
-						...qualityArray.slice(0, qualityIndex),
-						...qualityArray.slice(qualityIndex + 1),
-					],
-					karma: Object.assign(
-						{},
-						prevState.karma,
-						{
-							[category]: prevState.karma[category] - Number(removeQualityKarma),
-						},
-					),
-				},
-			);
-		},
-		DEFAULT: (prevState) => { return prevState; },
-	};
-	return (actionsToTake[action.type] || actionsToTake.DEFAULT)(state, action.parameter);
-};
+			state[category].splice(qualityIndex, 1);
+			state.karma[category] = state.karma[category] - Number(removeQualityKarma);
+		}
+	}
+});
 
-export default qualityReducer;
+export const { selectQuality, removeQuality } = qualitySlice.actions;
+
+export default qualitySlice.reducer;

@@ -7,10 +7,6 @@ export default {
 		{
 			priorityTable: PropTypes.func.isRequired,
 			selectMetatype: PropTypes.func.isRequired,
-			incrementAttribute: PropTypes.func.isRequired,
-			decrementAttribute: PropTypes.func.isRequired,
-			incrementAugmented: PropTypes.func.isRequired,
-			decrementAugmented: PropTypes.func.isRequired,
 			selectMagictype: PropTypes.func.isRequired,
 			incrementSkill: PropTypes.func.isRequired,
 			decrementSkill: PropTypes.func.isRequired,

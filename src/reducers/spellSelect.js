@@ -1,8 +1,85 @@
-/* Define your initial state here.
- *
- * If you change the type from object to something else, do not forget to update
- * src/container/App.js accordingly.
- */
+import { createSlice } from "@reduxjs/toolkit";
+
+const mysticPowerKarmaCost = (state, updatedPowerPoints, isMystic) => isMystic &&
+	(
+		updatedPowerPoints < Math.ceil(state.powerPointsSpent) ||
+		updatedPowerPoints > ~~oldState.powerPointsSpent
+	) ? Math.ceil(updatedPowerPoints) * 5 : updatedPowerPoints;
+
+const spellSlice = createSlice({
+	name: 'spellSelect',
+	initialState: {
+		spells: [],
+		powers: [],
+		powerPointsSpent: 0,
+		powerPointsKarma: 0,
+		complexforms: [],
+	},
+	reducers: {
+		addSpell: (state, action) => {
+			const newSpell = action.payload.newSpell;
+			const spellAlreadyExists = state.spells.find(spell => spell.name === newSpell);
+
+			if(spellAlreadyExists) return state;
+			state.spells.push(newSpell);
+		},
+		removeSpell: (state, action) => {
+			const spellIndex = action.payload.spellIndex;
+			state.spells.splice(spellIndex, 1);
+		},
+		addComplexForm: (state, action) => {
+			const newSpell = action.payload.newSpell;
+			state.complexforms.push(newSpell);
+		},
+		removeComplexForm: (state, action) => {
+			const spellIndex = action.payload.spellIndex;
+			state.complexforms.splice(spellIndex, 1);
+		},
+		addPower: (state, action) => {
+			const { newSpell, isMystic } = action.payload;
+			const updatedPowerPoints = state.powerPointsSpent + Number(newSpell.points);
+			state.powers.push(newSpell);
+			state.powerPointsSpent = updatedPowerPoints;
+			state.powerPointsKarma = mysticPowerKarmaCost(state, updatedPowerPoints, isMystic)
+		},
+		removePower: (state, action) => {
+			const { powerIndex, isMystic } = action.payload;
+			const power = state.powers[powerIndex];
+			const updatedPowerPoints = state.powerPointsSpent - (
+				Number(power.points) * (power.levels > 0 ? power.levels : 1)
+			);
+
+			state.powers.splice(powerIndex, 1);
+			state.powerPointsSpent = updatedPowerPoints;
+			state.powerPointsKarma = mysticPowerKarmaCost(state, updatedPowerPoints, isMystic);
+		},
+		raisePower: (state, action) => {
+			const { powerIndex, isMystic } = action.payload;
+			const power = state.powers[powerIndex];
+			const updatedPowerPoints = state.powerPointsSpent + Number(newSpell.points);
+
+			power.levels++;
+			state.powerPointsSpent = updatedPowerPoints;
+			state.powerPointsKarma = mysticPowerKarmaCost(state, updatedPowerPoints, isMystic);
+		},
+		lowerPower: (state, action) => {
+			const { powerIndex, isMystic } = action.payload;
+			const power = state.powers[powerIndex];
+			const updatedPowerPoints = state.powerPointsSpent - Number(power.points);
+
+			power.levels--;
+			state.powerPointsSpent = updatedPowerPoints;
+			state.powerPointsKarma = mysticPowerKarmaCost(state, updatedPowerPoints, isMystic);
+		},
+		resetAbility: (state, action) => {
+			const { ability } = action.payload;
+			state[ability] = [];
+			state.powerPointsSpent = ability === 'powers' ? 0 : state.powerPointsSpent;
+			state.powerPointsKarma = 0;
+		},
+	}
+})
+
 const initialState = {
 	spells: [],
 	powers: [],
@@ -214,4 +291,8 @@ const spellReducer = (state = initialState, action) => {
 	return (actionsToTake[action.type] || actionsToTake.DEFAULT)(state, action.parameter);
 };
 
-export default spellReducer;
+export const { addSpell, removeSpell, addComplexForm, removeComplexForm, addPower, removePower, raisePower, lowerPower, resetAbility } = spellSlice.actions;
+
+export default spellSlice.reducer;
+
+// export default spellReducer;

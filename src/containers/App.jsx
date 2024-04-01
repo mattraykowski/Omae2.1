@@ -12,12 +12,6 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
-	priorityTable,
-	selectMetatype,
-	incrementAttribute,
-	decrementAttribute,
-	incrementAugmented,
-	decrementAugmented,
 	selectMagictype,
 	incrementSkill,
 	decrementSkill,
@@ -34,14 +28,10 @@ import {
 	raisePower,
 	lowerPower,
 	resetAbility,
-	selectQuality,
-	removeQuality,
-	karma,
 	purchaseGear,
 	sellGear,
 	addSkill,
 	removeSkill,
-	style,
 	weaponModding,
 	moddingMulti,
 	demoddingMulti,
@@ -49,6 +39,7 @@ import {
 	demoddingCapacity,
 	modalClose,
 } from '../actions/';
+
 import Main from '../components/Main';
 import PriorityTableComponent from '../components/priorityTable/PriorityTableComponent';
 import MetatypeSelector from '../components/MetatypeSelectorComponent';
@@ -57,10 +48,12 @@ import QualityComponent from '../components/QualityComponent';
 import MagicSelectionComponent from '../components/magic/MagicSelectionComponent';
 import SkillsComponent from '../components/skills/SkillsComponent';
 import StreetGearComponent from '../components/gear/StreetGearComponent';
-import Summary from './summary';
+import SummaryComponent from '../components/SummaryComponent';
 import PropTypeChecking from '../config/propTypeChecking';
 import Modal from '../components/Modal';
 import LifeStyleComponent from '../components/lifestyles/LifeStyleComponent';
+import { setKarma } from '../reducers/karma';
+import { selectMetatype } from '../reducers/selectMetatype';
 
 /* Populated by react-webpack-redux:reducer */
 class App extends Component {
@@ -70,15 +63,14 @@ class App extends Component {
 		}
 	}
 	render() {
-		const {actions, priorityTableState, selectMetatypeState, attributes, selectMagRes, settingSkills, spellSelect, quality, karmaState, purchaseGearState, modalInfo} = this.props,
+		const {actions, priorityTableState, selectMetatypeState, attributes, selectMagRes, settingSkills, spellSelect, karmaState, purchaseGearState, modalInfo} = this.props,
 			karmaTotal = karmaState - spellSelect.powerPointsKarma;
 		return (
 			<div className="container">
 				<div className="row">
 					<div className="col-md-12">
-						<Main style={actions.style} />
-
-						<PriorityTableComponent changePriority={actions.priorityTable} priorityTable={priorityTableState} />
+						<Main />
+						<PriorityTableComponent />
 					</div>
 				</div>
 				{
@@ -88,23 +80,13 @@ class App extends Component {
 				}
 				<div className="row">
 					<div className="col-md-12 col-lg-9">
-						<MetatypeSelector priorityRating={priorityTableState.metatype} metatype={selectMetatypeState} action={actions.selectMetatype} />
+						<MetatypeSelector />
+						<AttributesComponent />
 
-						<AttributesComponent
-							metatypeRating={priorityTableState.metatype}
-							priorityRating={priorityTableState.attribute}
-							magicPriority={priorityTableState.magres}
-							magictype={selectMagRes}
-							metatype={selectMetatypeState}
-							actions={actions}
-							attributes={attributes} />
-
-						<QualityComponent karma={karmaTotal} actions={actions} selectedQualities={quality} />
+						<QualityComponent karma={karmaTotal} />
 
 						<MagicSelectionComponent
-							magicPriority={priorityTableState.magres}
 							magictype={selectMagRes}
-							magicAttribute={attributes.special}
 							selectedSpellsPowers={spellSelect}
 							actions={actions} />
 
@@ -121,7 +103,7 @@ class App extends Component {
 						<LifeStyleComponent purchasedLifestyles={purchaseGearState.lifestyles} sellGear={actions.sellGear} />
 					</div>
 					<div id="summary" className="col-md-12 col-lg-3">
-						<Summary />
+						<SummaryComponent />
 					</div>
 				</div>
 			</div>
@@ -141,7 +123,6 @@ App.propTypes = {
 	selectMagRes: PropTypeChecking.selectMagRes.isRequired,
 	settingSkills: PropTypeChecking.settingSkills.isRequired,
 	spellSelect: PropTypeChecking.spellSelect.isRequired,
-	quality: PropTypeChecking.quality.isRequired,
 	karmaState: PropTypeChecking.karma.isRequired,
 	purchaseGearState: PropTypeChecking.purchaseGear.isRequired,
 	styleTheme: PropTypes.string.isRequired,
@@ -160,7 +141,6 @@ function mapStateToProps(state) {
 		selectMagRes: state.selectMagRes,
 		settingSkills: state.settingSkills,
 		spellSelect: state.spellSelect,
-		quality: state.quality,
 		karmaState: state.karma,
 		purchaseGearState: state.purchaseGear,
 		styleTheme: state.appControl.styleTheme,
@@ -171,12 +151,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
 	/* Populated by react-webpack-redux:action */
 	const actions = {
-		priorityTable,
 		selectMetatype,
-		incrementAttribute,
-		decrementAttribute,
-		incrementAugmented,
-		decrementAugmented,
 		selectMagictype,
 		incrementSkill,
 		decrementSkill,
@@ -193,14 +168,11 @@ function mapDispatchToProps(dispatch) {
 		raisePower,
 		lowerPower,
 		resetAbility,
-		selectQuality,
-		removeQuality,
-		karma,
+		karma: setKarma,
 		purchaseGear,
 		sellGear,
 		addSkill,
 		removeSkill,
-		style,
 		weaponModding,
 		moddingMulti,
 		demoddingMulti,

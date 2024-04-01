@@ -11,6 +11,7 @@ const initialState = {
 const purchaseGearReducer = (state = initialState, action) => {
 
 	const actionsToTake = {
+		// Note: this is shared with attributes
 		PURCHASE(prevState, {gear, category, Rating}) {
 			let { cost } = gear,
 				gearToAdd = Rating ? {...gear, currentRating: Rating} : gear;
@@ -33,6 +34,7 @@ const purchaseGearReducer = (state = initialState, action) => {
 				nuyen: prevState.nuyen + Number(cost),
 			};
 		},
+		// Note: this is shared with attributes
 		SELL(prevState, {index, category}) {
 			const gearArray = prevState[category],
 				gearBeingSold = gearArray[index],

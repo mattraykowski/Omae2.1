@@ -1,17 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux'
+
 
 const ModificationButton = ({ attName, buttonClass, maxPoints, pointsLeft, modificationFunction, attType, symbol }) => {
+	const dispatch = useDispatch();
 	return (
 		<button
 			className={`btn ${buttonClass}`}
 			onClick={() => {
 				if (pointsLeft === undefined || pointsLeft > 0) {
-					modificationFunction({
+					dispatch(modificationFunction({
 						attribute: attName,
 						max: maxPoints,
 						spend: attType,
-					});
+					}));
 				}
 			}}
 			>

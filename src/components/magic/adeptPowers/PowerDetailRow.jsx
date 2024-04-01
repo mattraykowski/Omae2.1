@@ -1,10 +1,98 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-
+import { incrementAugmented, decrementAugmented } from '../../../reducers/attributes';
 import {generateAddActionDetails, generateRemoveActionDetails} from './util/AdeptPowersUtil';
 import PowerLevelCounter from './PowerLevelCounter';
 
-class PowerDetailRow extends React.Component {
+
+const PowerDetailRow = ({actions, index, isMystic, power, pointsSpent, maxPoints, add}) => {
+	const { value, setValue } = useState('');
+	
+	const powerBonus = (bonus, name) => {
+		if (!bonus) {
+			return 'N/A';
+		}
+
+		const onChange = (e) => {
+			setValue(e.target.value);
+		};
+
+		const bonusSelector = {
+			selectattribute(attributes) {
+				const options = [(<option key={`${name}-blank`} />)].concat(attributes.attribute.map((attName) => {
+					const lowerCase = attName.toLowerCase();
+					return (<option key={`${name}-${lowerCase}`}>({lowerCase})</option>);
+				}));
+
+				return (<select key={name} className="form-control" onChange={onChange}>{options}</select>);
+			},
+			default(thing) {
+				return Object.keys(thing).join(', ');
+			},
+		};
+
+		if (typeof bonus === 'object') {
+			// Currently this will blow up, need to figure out if it'll happen and how to do it.
+			return Object.keys(bonus).map((effect) => {
+				return (bonusSelector[effect] || bonusSelector.default)(bonus[effect]);
+			});
+		}
+		return bonus;
+	}
+
+	const action = (canAdd) => {
+		// const {actions, index, isMystic, power, pointsSpent, maxPoints, add} = this.props;
+
+		if (!add) {
+			return actions.removePower(generateRemoveActionDetails(isMystic, power, index, actions.decrementAugmented));
+		} else if (canAdd) {
+			return actions.addPower(generateAddActionDetails(isMystic, power, pointsSpent, maxPoints, value, actions.incrementAugmented));
+		}
+
+		return undefined;
+	}
+
+	// const {power, index, pointsSpent, add, maxPoints, isMystic, actions} = this.props;
+
+		const bonusOrOptions = powerBonus(power.bonus, power.name);
+		const canAdd = Number(power.points) + pointsSpent <= maxPoints;
+
+		let symbol = '+';
+		let classNames = canAdd ? 'btn-success' : 'disabled btn-danger';
+		let levelInfo = power.levels;
+
+		if (!add) {
+			classNames = 'btn-warning';
+			symbol = '-';
+
+			if (power.levels !== 'N/A') {
+				const counterProps = {actions, power, index, pointsSpent, maxPoints, isMystic};
+				levelInfo = <PowerLevelCounter {...counterProps} />;
+			}
+		}
+
+		return (
+			<tr key={`power-${index}${power.name}`}>
+				<td>
+					<button
+						className={`btn ${classNames}`}
+						onClick={() => {
+							action(canAdd);
+						}}
+						>
+						{symbol}
+					</button>
+				</td>
+				<td>{levelInfo}</td>
+				<td>{power.name}</td>
+				<td>{power.points}</td>
+				<td>{bonusOrOptions}</td>
+				<td>{`${power.source} p${power.page}`}</td>
+			</tr>);
+	
+}
+class PowerDetailRowClazz extends React.Component {
 	constructor(props) {
 		super(props);
 

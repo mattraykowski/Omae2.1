@@ -1,20 +1,16 @@
-/* Define your initial state here.
- *
- * If you change the type from object to something else, do not forget to update
- * src/container/App.js accordingly.
- */
-const initialState = 'Mage';
+import { createSlice } from "@reduxjs/toolkit";
 
-const magicReducer = (state = initialState, action) => {
-	const actionsToTake = {
-		SELECT_MAGICTYPE: (prevState, selectedMagicType) => {
-			return selectedMagicType;
-		},
+const magicSlice = createSlice({
+	name: 'selectMagRes',
+	initialState: 'Mage',
+	reducers: {
+		selectMagicType: (_, action) => {
+			return action.payload;
+		}
+	}
+});
 
-		DEFAULT: (prevState) => { return prevState; },
-	};
+export const { selectMagicType } = magicSlice.actions;
 
-	return (actionsToTake[action.type] || actionsToTake.DEFAULT)(state, action.parameter);
-};
+export default magicSlice.reducer;
 
-export default magicReducer;

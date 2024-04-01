@@ -1,24 +1,19 @@
-/* Define your initial state here.
- *
- * If you change the type from object to something else, do not forget to update
- * src/container/App.js accordingly.
- */
+import { createSlice } from "@reduxjs/toolkit";
+import { selectMetatype } from "./selectMetatype";
 
-const initialState = 25;
+const karmaSlice = createSlice({
+	name: 'karma',
+	initialState: 25,
+	reducers: {
+		setKarma: (state, action) => state += action.payload.karmaPoints,
+	},
+	extraReducers: builder => {
+		builder.addCase(selectMetatype, (state, action) =>
+			state + (action.payload.karmaOldCost - action.payload.karmaNewCost)
+		)
+	}
+});
 
-const KarmaReducer = (state = initialState, action) => {
-	const actionsToTake = {
-		KARMA(prevState, {karmaPoints}) {
-			return prevState + karmaPoints;
-		},
+export const { setKarma } = karmaSlice.actions;
 
-		SELECT_METATYPE(prevState, {karmaOldCost, karmaNewCost}) {
-			return prevState + karmaOldCost - karmaNewCost;
-		},
-
-		DEFAULT(prevState) { return prevState; },
-	};
-	return (actionsToTake[action.type] || actionsToTake.DEFAULT)(state, action.parameter);
-};
-
-export default KarmaReducer;
+export default karmaSlice.reducer;

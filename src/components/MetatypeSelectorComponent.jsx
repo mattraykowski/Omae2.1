@@ -2,77 +2,89 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import metatypeData from '../data/metatype.json';
 import priorityData from '../data/priority.json';
+import { useDispatch, useSelector } from 'react-redux';
+import {selectMetatype} from '../reducers/selectMetatype';
 
-class MetatypeSelectorComponent extends React.PureComponent {
-	render() {
-		const { priorityRating, metatype, action } = this.props,
-			currentMetaData = metatypeData[metatype.typeName],
-			karmaOldCost =
-				priorityData[metatype.priority].metatype[metatype.typeName]
-					.karma || 0,
-			priorityMetaData = priorityData[priorityRating].metatype;
+const MetatypeSelectorComponent = () => {
+	const priorityRating = useSelector(state => state.priorityTable.metatype);
+	const metatype = useSelector(state => state.selectMetatype);
 
-		const buttonElements = Object.keys(metatypeData).map((typeName) => {
-			return (
-				<MetatypeButton
-					key={typeName}
-					typeName={typeName}
-					anOption={typeName in priorityMetaData}
-					checked={metatype.typeName === typeName}
-					selectMetatypeAction={action}
-					priority={priorityRating}
-					karmaNewCost={
-						(priorityMetaData[typeName] &&
-							priorityMetaData[typeName].karma) ||
-						0
-					}
-					karmaOldCost={karmaOldCost}
-				/>
-			);
-		});
+	const currentMetaData = metatypeData[metatype.typeName],
+		karmaOldCost =
+			priorityData[metatype.priority].metatype[metatype.typeName]
+				.karma || 0,
+		priorityMetaData = priorityData[priorityRating].metatype;
 
-		const racial = metatypeData[metatype.typeName].racial;
-
-		const racialDetails = Object.keys(racial).map((trait) => {
-			return (
-				<p key={metatype.typeName + trait}>
-					<strong>{trait}: </strong>
-					{racial[trait]}
-				</p>
-			);
-		});
-
+	const buttonElements = Object.keys(metatypeData).map((typeName) => {
 		return (
-			<div className="metatypeselector-component">
-				<div className="row">
-					<h2>Metatype</h2>
-					<div className="col-md-12 scroll-overflow">
-						<div className="btn-group">{buttonElements}</div>
-					</div>
-					<div className="col-sm-6">
-						<h3>Racial Traits</h3>
-						{racialDetails}
-					</div>
-					<div className="col-sm-6">
-						<h3>Reference</h3>
-						<strong>{currentMetaData.reference.book}</strong> p
-						{currentMetaData.reference.page}
-					</div>
+			<MetatypeButton
+				key={typeName}
+				typeName={typeName}
+				anOption={typeName in priorityMetaData}
+				checked={metatype.typeName === typeName}
+				priority={priorityRating}
+				karmaNewCost={
+					(priorityMetaData[typeName] &&
+						priorityMetaData[typeName].karma) ||
+					0
+				}
+				karmaOldCost={karmaOldCost}
+			/>
+		);
+	});
+
+	const racial = metatypeData[metatype.typeName].racial;
+
+	const racialDetails = Object.keys(racial).map((trait) => {
+		return (
+			<p key={metatype.typeName + trait}>
+				<strong>{trait}: </strong>
+				{racial[trait]}
+			</p>
+		);
+	});
+
+	return (
+		<div className="metatypeselector-component">
+			<div className="row">
+				<h2>Metatype</h2>
+				<div className="col-md-12 scroll-overflow">
+					<div className="btn-group">{buttonElements}</div>
+				</div>
+				<div className="col-sm-6">
+					<h3>Racial Traits</h3>
+					{racialDetails}
+				</div>
+				<div className="col-sm-6">
+					<h3>Reference</h3>
+					<strong>{currentMetaData.reference.book}</strong> p
+					{currentMetaData.reference.page}
 				</div>
 			</div>
-		);
-	}
+		</div>
+	);
 }
 
 const MetatypeButton = ({
 	typeName,
 	anOption,
 	checked,
-	selectMetatypeAction,
 	karmaNewCost,
 	karmaOldCost,
 	priority,
 }) => {
+	const dispatch = useDispatch();
+	const onChange = () => {
+		if (anOption) {
+			dispatch(selectMetatype({
+				typeName,
+				priority,
+				karmaOldCost,
+				karmaNewCost,
+			}));
+		}
+	}
+
 	return (
 		<label
 			className={`btn
@@ -87,16 +99,7 @@ const MetatypeButton = ({
 				id={`metatype-${typeName}`}
 				autoComplete="off"
 				checked={checked}
-				onChange={() => {
-					if (anOption) {
-						selectMetatypeAction({
-							typeName,
-							priority,
-							karmaOldCost,
-							karmaNewCost,
-						});
-					}
-				}}
+				onChange={onChange}
 			/>
 			{typeName}
 		</label>
